@@ -1,0 +1,61 @@
+[jane@ip-172-31-24-107 huutogui]$ cat public/huutojane.html
+<HTML>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  $("#doSearch").click(function(){
+    var postalCode = $('#postalCodeField').val();
+    var Issue = $('#issueField').val();
+    //var searchUrl = "http://api.huuto.net/1.1/items?area=" + postalCode + "?words=mekko";
+    var searchUrl = "http://api.huuto.net/1.1/items?words=" + Issue + "&area=" + postalCode;
+
+    $.ajax({
+        url: searchUrl
+    }).then(function(data) {
+       $('p.result').text(data.totalCount);
+       console.log(data.totalCount);
+
+       var itemArray = data.items;
+
+       $("#itemtable").empty();
+       itemArray.forEach( function(item) {
+          $("#itemtable").append("<TR><TD>"+item.id+"</TD><TD>"+item.title+"</TD><TD>"+item.closingTime+"</TD></TR>");
+       });
+
+    });
+
+  });
+
+});
+</script>
+</head>
+
+<BODY>
+ <div>
+            <p class="totalCount">count is </p>
+        </div>
+
+<div> <p class="result">result is </p> </div>
+
+<form>
+<label for="postcode">Postinumero/paikkakunta:
+<input type="text" name="postcode" id="postalCodeField"><br>
+</label>
+</form>
+
+<form>
+<label for="issue">Hae tavara:
+<input type="text" name="issue" id="issueField"><br>
+</label>
+</form>
+
+<button id="doSearch">Search</button>
+
+<TABLE id="itemtable" border="1">
+</TABLE>
+
+
+</BODY>
+</HTML>
